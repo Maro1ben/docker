@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+
+  api:
+    restart: always
+    build:
+      context: api
+        #image: openjdk:${TAG_JDK:-17}
+    ports:
+      - ${API_PORT:-8080}:8080
+     
+
+  db:
+    restart: always
+    image: postgres:${PG_TAG:-15.2}
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    environment:
+      POSTGRES_USER: ${DB_USER:-movie}
+      POSTGRES_DB: ${DB_NAME:-dbmovie}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - data_pg_movie:/var/lib/postgresql/data
+
+volumes:
+   data_pg_movie:
